@@ -14,7 +14,6 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS estudantes_mv AS
 SELECT age, mental_health_rating, part_time_job, diet_quality, exam_score, attendance_percentage FROM estudantes;
 """
 
-# Executa o SQL
 with engine.begin() as conn:
     conn.execute(text(sql_mv))
 

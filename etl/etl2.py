@@ -1,5 +1,5 @@
 import pandas as pd
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
 def limparnulos(df, coluna):
     if df[coluna].dtype == "object":
@@ -21,6 +21,9 @@ banco = 'estudantes'
 engine = create_engine(f'postgresql+psycopg2://{usuario}:{senha}@{host}:{porta}/{banco}')
 
 tabela = 'estudantes'
+
+with engine.begin() as conn:
+    conn.execute(text("DROP MATERIALIZED VIEW IF EXISTS estudantes_mv;"))
 
 df.to_sql(tabela, engine, if_exists='replace', index=False)
 

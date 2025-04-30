@@ -1,13 +1,13 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
 
-usuario = 'usuario'
-senha = 'senha'
+username = 'usuario'
+password = 'senha'
 host = 'localhost'
-porta = '5434'
-banco = 'estudantes'
+port = '5434'
+database = 'estudantes'
 
-engine = create_engine(f'postgresql+psycopg2://{usuario}:{senha}@{host}:{porta}/{banco}')
+engine = create_engine(f'postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}')
 
 sql_mv = """
 CREATE MATERIALIZED VIEW IF NOT EXISTS estudantes_mv AS
@@ -17,8 +17,8 @@ SELECT age, mental_health_rating, part_time_job, diet_quality, exam_score, atten
 with engine.begin() as conn:
     conn.execute(text(sql_mv))
 
-consulta_sql = "SELECT * FROM estudantes_mv;"
+query = "SELECT * FROM estudantes_mv;"
 
-df = pd.read_sql(consulta_sql, engine)
+df = pd.read_sql(query, engine)
 
 df.to_csv('../staging/trust/resultado_consulta.csv', index=False)

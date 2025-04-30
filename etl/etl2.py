@@ -1,7 +1,7 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
 
-def limparnulos(df, coluna):
+def clean_null(df, coluna):
     if df[coluna].dtype == "object":
         df[coluna].fillna(df[coluna].mode()[0], inplace=True)
     elif df[coluna].dtype == "float64" or df[coluna].dtype == "int64":
@@ -10,20 +10,20 @@ def limparnulos(df, coluna):
 df = pd.read_csv('../staging/raw/student_habits_performance.csv')
 
 for coluna in df.columns:
-     limparnulos(df, coluna)
+     clean_null(df, coluna)
 
-usuario = 'usuario'
-senha = 'senha'
+username = 'usuario'
+password = 'senha'
 host = 'localhost'
-porta = '5434'
-banco = 'estudantes'
+port = '5434'
+database = 'estudantes'
 
-engine = create_engine(f'postgresql+psycopg2://{usuario}:{senha}@{host}:{porta}/{banco}')
+engine = create_engine(f'postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}')
 
-tabela = 'estudantes'
+table = 'estudantes'
 
 with engine.begin() as conn:
     conn.execute(text("DROP MATERIALIZED VIEW IF EXISTS estudantes_mv;"))
 
-df.to_sql(tabela, engine, if_exists='replace', index=False)
+df.to_sql(table, engine, if_exists='replace', index=False)
 
